@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Empresa de Frutas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Paleta 1: Fresca y Natural */
+            --primary-color: #4caf50;
+            --secondary-color: #8bc34a;
+            --accent-color: #ff9800;
+            --text-color: #333333;
+            --background-color: #f5f5f5;
+            
+            /* Para cambiar de paleta, descomenta una de las siguientes secciones y comenta la anterior */
+            
+            /* Paleta 2: Cítricos Vibrantes 
+            --primary-color: #ff7043;
+            --secondary-color: #ffb74d;
+            --accent-color: #66bb6a;
+            --text-color: #424242;
+            --background-color: #fff8e1;
+            */
+            
+            /* Paleta 3: Manzana Roja 
+            --primary-color: #d32f2f;
+            --secondary-color: #689f38;
+            --accent-color: #fbc02d;
+            --text-color: #37474f;
+            --background-color: #f9f9f9;
+            */
+            
+            /* Paleta 4: Orgánica y Suave 
+            --primary-color: #795548;
+            --secondary-color: #a5d6a7;
+            --accent-color: #ffcc80;
+            --text-color: #3e2723;
+            --background-color: #f1f8e9;
+            */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 999;
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.3s;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            width: 60px;
+        }
+
+        .sidebar.active {
+            width: 250px;
+        }
+
+        .sidebar .sidebar-header {
+            padding: 10px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .logo-container {
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .logo {
+            max-height: 40px;
+            max-width: 40px;
+        }
+
+        .sidebar.active .logo {
+            max-height: 40px;
+            max-width: 120px;
+        }
+
+        .sidebar .user-info {
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar .sidebar-menu {
+            padding: 0;
+            list-style: none;
+        }
+
+        .sidebar .sidebar-menu > li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .sidebar-menu > li > a {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar .sidebar-menu > li > a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .sidebar .sidebar-menu > li > a > i {
+            min-width: 30px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .sidebar .sidebar-menu > li > a > span {
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.active .sidebar-menu > li > a > span {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .submenu {
+            padding-left: 0;
+            list-style: none;
+            background-color: rgba(0, 0, 0, 0.1);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .submenu-active {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .submenu li a {
+            padding: 10px 10px 10px 50px;
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .submenu li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .content {
+            width: 100%;
+            padding: 15px;
+            margin-left: 60px;
+            transition: margin 0.3s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-cards .card {
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .dashboard-cards .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-cards .card-header {
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .dashboard-cards .card-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 15px 0;
+            background-color: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .sidebar.active {
+                width: 250px;
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        /* Animaciones */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="/api/placeholder/40/40" alt="Logo" class="logo">
+                </div>
+                <div class="user-info">
+                    <span>Bienvenido, Admin</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+                    <a href="#" class="menu-item active" data-menu="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li data-bs-toggle="tooltip" data-bs-placement="right" title="Inventario">
+                    <a href="#" class="menu-item has-submenu" data-menu="inventory">
+                        <i class="fas fa-apple-alt"></i>
+                        <span>Inventario</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'tabla' %}">Frutas Frescas</a></li>
+                        <li><a href="#">Semillas</a></li>
+                        <li><a href="#">Equipos</a></li>
+                    </ul>
+                </li>
+                <li data-bs-toggle="tooltip" data-bs-placement="right" title="Cultivos">
+                    <a href="#" class="menu-item has-submenu" data-menu="harvest">
+                        <i class="fas fa-seedling"></i>
+                        <span>Cultivos</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#">Programación</a></li>
+                        <li><a href="#">Seguimiento</a></li>
+                        <li><a href="#">Predicciones</a></li>
+                    </ul>
+                </li>
+                <li data-bs-toggle="tooltip" data-bs-placement="right" title="Ventas">
+                    <a href="#" class="menu-item has-submenu" data-menu="sales">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Ventas</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#">Pedidos</a></li>
+                        <li><a href="#">Clientes</a></li>
+                        <li><a href="#">Estadísticas</a></li>
+                    </ul>
+                </li>
+                <li data-bs-toggle="tooltip" data-bs-placement="right" title="Reportes">
+                    <a href="#" class="menu-item has-submenu" data-menu="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reportes</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#">Ventas Mensuales</a></li>
+                        <li><a href="#">Producción</a></li>
+                        <li><a href="#">Rendimiento</a></li>
+                    </ul>
+                </li>
+                <li data-bs-toggle="tooltip" data-bs-placement="right" title="Configuración">
+                    <a href="#" class="menu-item" data-menu="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="header">
+                <h1 class="text-center">Dashboard</h1>
+            </div>
+
+            <div class="container">
+                <div class="row dashboard-cards">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Producción Total</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="card-icon mb-3">
+                                    <i class="fas fa-apple-alt"></i>
+                                </div>
+                                <h3>1,250 Ton</h3>
+                                <p class="text-muted">+12% respecto al mes anterior</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Ventas</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="card-icon mb-3">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <h3>$85,420</h3>
+                                <p class="text-muted">+8% respecto al mes anterior</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Clientes</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="card-icon mb-3">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>128</h3>
+                                <p class="text-muted">+5 nuevos este mes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Pedidos Pendientes</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="card-icon mb-3">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <h3>24</h3>
+                                <p class="text-muted">4 para entrega hoy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Ventas por Producto</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Distribución de Cultivos</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="cultivationChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Últimos Pedidos</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Cliente</th>
+                                                <th>Producto</th>
+                                                <th>Cantidad</th>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#1082</td>
+                                                <td>Supermercado Central</td>
+                                                <td>Manzanas Rojas</td>
+                                                <td>500 kg</td>
+                                                <td>02/03/2025</td>
+                                                <td><span class="badge bg-success">Entregado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#1081</td>
+                                                <td>Fruterías Deliciosas</td>
+                                                <td>Naranjas Valencia</td>
+                                                <td>350 kg</td>
+                                                <td>01/03/2025</td>
+                                                <td><span class="badge bg-warning">En ruta</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#1080</td>
+                                                <td>Restaurante Orgánico</td>
+                                                <td>Mix de Frutas</td>
+                                                <td>120 kg</td>
+                                                <td>01/03/2025</td>
+                                                <td><span class="badge bg-primary">Procesando</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#1079</td>
+                                                <td>Hoteles Vacacionales</td>
+                                                <td>Manzanas Verdes</td>
+                                                <td>200 kg</td>
+                                                <td>28/02/2025</td>
+                                                <td><span class="badge bg-success">Entregado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#1078</td>
+                                                <td>Supermercado Norte</td>
+                                                <td>Naranjas y Manzanas</td>
+                                                <td>650 kg</td>
+                                                <td>27/02/2025</td>
+                                                <td><span class="badge bg-success">Entregado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>© 2025 Optumat. Todos los derechos reservados.</div>
+                        <div><a href="#" class="text-decoration-none">Contáctenos</a></div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Inicializar tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Función para mostrar/ocultar el menú al pasar el mouse
+            $('#sidebar').on('mouseenter', function() {
+                $(this).addClass('active');
+            });
+
+            $('#sidebar').on('mouseleave', function() {
+                if (!$(this).hasClass('locked')) {
+                    $(this).removeClass('active');
+                    $('.submenu').removeClass('submenu-active');
+                }
+            });
+
+            // Mostrar/ocultar submenú
+            $('.has-submenu').on('click', function(e) {
+                e.preventDefault();
+                var submenu = $(this).next('.submenu');
+                
+                if ($('#sidebar').hasClass('active')) {
+                    submenu.toggleClass('submenu-active');
+                    
+                    // Si no está activo el submenú, cerrar los demás
+                    if (!submenu.hasClass('submenu-active')) {
+                        $('.submenu').removeClass('submenu-active');
+                    }
+                } else {
+                    // Si el sidebar no está desplegado, desplegarlo y mostrar el submenú
+                    $('#sidebar').addClass('active locked');
+                    submenu.addClass('submenu-active');
+                }
+            });
+
+            // Botón de toggle para móviles
+            $('#mobileMenuToggle').on('click', function() {
+                $('#sidebar').toggleClass('active');
+                
+                if ($('#sidebar').hasClass('active')) {
+                    $('#sidebar').addClass('locked');
+                } else {
+                    $('#sidebar').removeClass('locked');
+                    $('.submenu').removeClass('submenu-active');
+                }
+            });
+
+            // Ocultar el menú al hacer clic fuera de él (para móviles)
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#sidebar').length && !$(e.target).closest('#mobileMenuToggle').length) {
+                    $('#sidebar').removeClass('active locked');
+                    $('.submenu').removeClass('submenu-active');
+                }
+            });
+
+            // Gráfico de ventas
+            var ctx1 = document.getElementById('salesChart').getContext('2d');
+            var salesChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+                    datasets: [
+                        {
+                            label: 'Manzanas',
+                            data: [12, 19, 15, 17, 14, 18],
+                            borderColor: '#4caf50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Naranjas',
+                            data: [8, 12, 18, 14, 16, 20],
+                            borderColor: '#ff9800',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Peras',
+                            data: [18, 23, 14, 16, 21, 30],
+                            borderColor: '#8bc34a',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Uvas',
+                            data: [2, 25, 32, 11, 17, 21],
+                            borderColor: '#9c27b0',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Toneladas vendidas'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de cultivos
+            var ctx2 = document.getElementById('cultivationChart').getContext('2d');
+            var cultivationChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Manzanas', 'Naranjas', 'Peras', 'Uvas'],
+                    datasets: [{
+                        data: [40, 30, 15, 15],
+                        backgroundColor: [
+                            '#4caf50',
+                            '#ff9800',
+                            '#8bc34a',
+                            '#9c27b0'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
