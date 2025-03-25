@@ -1,0 +1,69 @@
+# Dependencias
+/node_modules
+/.pnp
+.pnp.js
+
+# Archivos de compilación
+/build
+/dist
+
+# Entorno virtual de Python
+venv/
+env/
+.venv/
+
+# Archivos de caché de Python
+__pycache__/
+*.py[cod]
+
+# Alembic
+alembic/
+alembic.ini
+
+# Archivos de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+log/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Archivos de pruebas y cobertura
+/coverage
+
+# Archivos de producción
+/build
+
+# Archivos temporales
+*.log
+*.tmp
+*.temp
+
+# Archivos de base de datos
+*.sqlite
+
+# Archivos específicos de FastAPI
+__pycache__/
+*.pyc
+
+# Archivos específicos de React
+.cache/
+.eslintcache
+
+
+
