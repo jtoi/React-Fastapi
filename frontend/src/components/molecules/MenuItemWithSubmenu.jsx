@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SubMenuItem } from './SubMenuItem'; // Importa el componente SubMenuItem
+import { SubMenuItem } from '../atoms/SubMenuItem'; // Importa el componente SubMenuItem
 
 export const MenuItemWithSubmenu = ({
 	menuKey,

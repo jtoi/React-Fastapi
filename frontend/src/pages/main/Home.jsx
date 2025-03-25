@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import '../../styles/dashboard.css';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { CardSuperior }from "../../components/dashboard/CardSuperior";
-import { LineChart }from "../../components/dashboard/LineChart";
+import { CardSuperior }from "../../components/molecules/CardSuperior";
+import { LineChart }from "../../components/organisms/LineChart";
+import { TableHeader } from "../../components/molecules/TableHeader";
 
 
 export function Home() {
@@ -137,6 +138,7 @@ export function Home() {
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
+                                    <TableHeader />
                                     <table className="table table-hover">
                                         <thead>
                                             <tr>

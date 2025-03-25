@@ -1,0 +1,1 @@
+'Para la entidad "escandallo".'

@@ -2,7 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCog, faBox, faTruck, faChartBar, faExchangeAlt, faUtensils, faBars } from '@fortawesome/free-solid-svg-icons';
-import { MenuItemWithSubmenu } from '../../components/menu/MenuItemWithSubmenu';
+import { MenuItemWithSubmenu } from '../../components/molecules/MenuItemWithSubmenu';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext'; // Importa el contexto
 import '../../styles/header.css'; // Importa tus styles
