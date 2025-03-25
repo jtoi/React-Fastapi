@@ -5,7 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { CardSuperior }from "../../components/molecules/CardSuperior";
 import { LineChart }from "../../components/organisms/LineChart";
-import { TableHeader } from "../../components/molecules/TableHeader";
+import { Table } from "../../components/organisms/Table";
 
 
 export function Home() {
@@ -138,61 +138,7 @@ export function Home() {
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
-                                    <TableHeader />
-                                    <table className="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Cliente</th>
-                                                <th>Producto</th>
-                                                <th>Cantidad</th>
-                                                <th>Fecha</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#1082</td>
-                                                <td>Supermercado Central</td>
-                                                <td>Manzanas Rojas</td>
-                                                <td>500 kg</td>
-                                                <td>02/03/2025</td>
-                                                <td><span className="badge bg-success">Entregado</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1081</td>
-                                                <td>Fruterías Deliciosas</td>
-                                                <td>Naranjas Valencia</td>
-                                                <td>350 kg</td>
-                                                <td>01/03/2025</td>
-                                                <td><span className="badge bg-warning">En ruta</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1080</td>
-                                                <td>Restaurante Orgánico</td>
-                                                <td>Mix de Frutas</td>
-                                                <td>120 kg</td>
-                                                <td>01/03/2025</td>
-                                                <td><span className="badge bg-primary">Procesando</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1079</td>
-                                                <td>Hoteles Vacacionales</td>
-                                                <td>Manzanas Verdes</td>
-                                                <td>200 kg</td>
-                                                <td>28/02/2025</td>
-                                                <td><span className="badge bg-success">Entregado</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#1078</td>
-                                                <td>Supermercado Norte</td>
-                                                <td>Naranjas y Manzanas</td>
-                                                <td>650 kg</td>
-                                                <td>27/02/2025</td>
-                                                <td><span className="badge bg-success">Entregado</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <Table />
                                 </div>
                             </div>
                         </div>
@@ -200,7 +146,7 @@ export function Home() {
                 </div>
             </div>
 
-            <div className="row">
+            <div style={{ height: "55px" }}>
                 &nbsp;
             </div>
         </div>
