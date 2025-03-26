@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Importa Link
 
 export const CardSuperior = ({ label, text, pie, onClick }) => {
 

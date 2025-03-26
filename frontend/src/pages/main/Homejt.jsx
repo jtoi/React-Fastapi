@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import '../../styles/dashboard.css';
-import { CardSuperior }from "../../components/molecules/CardSuperior";
-import { LineChart }from "../../components/organisms/LineChart";
-import { Table } from "../../components/organisms/Table";
+// import { CardSuperior }from "../../components/molecules/CardSuperior";
+// import { LineChart }from "../../components/organisms/LineChart";
+// import { Table } from "../../components/organisms/Table";
 
 
 export function Home() {
@@ -59,17 +59,17 @@ export function Home() {
               pie: "+1% respecto al mes anterior",
             },
           ];
-        for (let i = 0; i < cardData.length; i++) {
-            cards.push(
-                <CardSuperior
-                    key={i}
-                    label={cardData[i].label}
-                    text={cardData[i].text}
-                    pie={cardData[i].pie}
-                />
-            );
-        }
-        return cards;
+        // for (let i = 0; i < cardData.length; i++) {
+        //     cards.push(
+        //         <CardSuperior
+        //             key={i}
+        //             label={cardData[i].label}
+        //             text={cardData[i].text}
+        //             pie={cardData[i].pie}
+        //         />
+        //     );
+        // }
+        // return cards;
     };
 
     const salesData = {
@@ -110,68 +110,20 @@ export function Home() {
         ]
     };
 
-    const ExpendedChart = () => {
-        try {
-          return <LineChart chartData={salesData} width="100%" height="310px" xtext="Mes" ytext="Valor"/>;
-        } catch (err) {
-          console.error("Error renderizando gráfico:", err);
-          return <div>Error al cargar el gráfico</div>;
-        }
-      };
+    // const ExpendedChart = () => {
+    //     try {
+    //       return <LineChart chartData={salesData} width="100%" height="310px" xtext="Mes" ytext="Valor"/>;
+    //     } catch (err) {
+    //       console.error("Error renderizando gráfico:", err);
+    //       return <div>Error al cargar el gráfico</div>;
+    //     }
+    //   };
 
 
 	return (
 		<div className="content">
             <div className="header">
                 <h1 className="text-center">Dashboard</h1>
-            </div>
-
-            <div className="container">
-                <div className="row dashboard-cards mb-2">
-                    {renderCards()}
-                </div>
-
-                <div className="row">
-                    <div className="col-md-12 col-lg-8">
-                        <div className="card">
-                            <div className="card-header">
-                                <h5>Gastos por Partida</h5>
-                            </div>
-                            <div className="card-body">
-                                <div className="chart-container">
-                                    {ExpendedChart()}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-12 col-lg-4">
-                        <div className="card">
-                            <div className="card-header">
-                                <h5>Distribución de Cultivos</h5>
-                            </div>
-                            <div className="card-body">
-                                <div className="chart-container">
-                                    <canvas id="cultivationChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
- 
-                <div className="row">
-                    <div className="col-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h5>Últimos Pedidos</h5>
-                            </div>
-                            <div className="card-body">
-                                <div className="table-responsive">
-                                    <Table />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div style={{ height: "55px" }}>

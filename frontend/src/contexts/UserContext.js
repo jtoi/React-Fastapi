@@ -1,4 +1,3 @@
-// UserContext.js
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import * as constants from "../constants";
@@ -9,31 +8,39 @@ export const UserProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
   const [menus, setMenus] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchUserData = useCallback(async () => {
     if (!token) {
-        console.log("Token no encontrado en fetchUserData");
-        return;
+      console.log("Token no encontrado en fetchUserData");
+      return;
     }
 
+    setIsLoading(true);
     try {
-        const userResponse = await api.get(constants.SERVER_URL + "users/me");
-        setUsername(userResponse.data.username);
+      const [userResponse, menusResponse] = await Promise.all([
+        api.get(constants.SERVER_URL + "users/me"),
+        api.get(constants.SERVER_URL + "auth/menus/")
+      ]);
 
-        const menusResponse = await api.get(constants.SERVER_URL + "auth/menus/");
-        setMenus(menusResponse.data.menus);
+      setUsername(userResponse.data.username);
+      setMenus(menusResponse.data.menus);
     } catch (error) {
-        console.error("Error fetching user data:", error);
-        setUsername(null);
-        setMenus([]);
-        localStorage.removeItem("token");
-        setToken(null);
+      console.error("Error fetching user data:", error);
+      setUsername(null);
+      setMenus([]);
+      localStorage.removeItem("token");
+      setToken(null);
+    } finally {
+      setIsLoading(false);
     }
-}, [token]);
+  }, [token]);
 
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+    if (token) {
+      fetchUserData();
+    }
+  }, [token, fetchUserData]);
 
   const updateToken = (newToken) => {
     setToken(newToken);
@@ -48,9 +55,15 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ username, menus, updateToken, clearAuthData, token }}>
+    <UserContext.Provider value={{ 
+      username, 
+      menus, 
+      updateToken, 
+      clearAuthData, 
+      token,
+      isLoading 
+    }}>
       {children}
     </UserContext.Provider>
   );
 };
-

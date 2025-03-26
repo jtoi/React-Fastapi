@@ -55,7 +55,7 @@ export const Login = () => {
                 updateToken(access_token);
     
                 alert("¡Inicio de sesión exitoso!");
-                // navigate("/");
+                navigate("/");
             } else {
                 alert("Usuario o contraseña incorrectos.");
             }
