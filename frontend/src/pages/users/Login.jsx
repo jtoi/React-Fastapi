@@ -4,6 +4,8 @@ import * as constants from "../../constants";
 import { useNavigate } from "react-router-dom";
 import authService from "../../services/authService";
 import { UserContext } from '../../contexts/UserContext'; // Importa el UserContext
+import { FormEntry } from "../../components/molecules/FormEntry";
+import { Button } from "../../components/atoms/Button";
 
 export const Login = () => {
     const [formData, setFormData] = useState({ username: "", password: "" });
@@ -74,33 +76,9 @@ export const Login = () => {
         <div className="container mt-5">
             <form onSubmit={handleSubmit} className="w-50 mx-auto border p-4 rounded">
                 <h3 className="text-center mb-4">Inicio de Sesión</h3>
-                <div className="form-group mb-3">
-                    <label htmlFor="username">Usuario</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        className="form-control"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group mb-3">
-                    <label htmlFor="password">Contraseña</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        className="form-control"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary w-100">
-                    Iniciar sesión
-                </button>
+                <FormEntry label={"Usuario"} type="text" name="username" id="username" value={formData.username} handleChange={handleChange} required />
+                <FormEntry label={"Contraseña"} type="password" name="password" id="password" value={formData.password} handleChange={handleChange} required />
+                <Button type="submit" label="Iniciar sesión" />
             </form>
         </div>
     );

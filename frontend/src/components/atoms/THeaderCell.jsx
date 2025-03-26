@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "./Button";
+import { Link } from "./Link";
 
 /**
  * Componente que renderiza una celda del header de una tabla, contiene un botón que,
@@ -13,5 +13,5 @@ import { Button } from "./Button";
  */
 export const THeaderCell
  = ({ onClick, data, label, clase }) => {
-	return <th data-sort={data}><Button url={onClick} data={data} label={label} clase={clase}></Button></th>;
+	return <th data-sort={data}><Link url={onClick} data={data} label={label} clase={clase}></Link></th>;
 };

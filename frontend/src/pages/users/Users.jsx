@@ -6,7 +6,6 @@ export const Users = () => {
   const [userData, setUserData] = useState(null); // Estado para almacenar la respuesta del servidor
   const [loading, setLoading] = useState(true); // Estado para manejar el estado de carga
   const [error, setError] = useState(null); // Estado para manejar errores
-  const baseurl = constants.SERVER_URL; // URL base de la API
 
 
   const fetchUserData = async () => {

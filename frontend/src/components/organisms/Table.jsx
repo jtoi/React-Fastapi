@@ -2,6 +2,12 @@ import React from "react";
 import { THeaderRow } from "../molecules/THeaderRow";
 import { TRow } from "../molecules/TRow";
 
+  /**
+   * Table es un componente que renderiza una tabla con los datos de los pedidos.
+   * La tabla tiene una fila de header con los títulos de las columnas y varias filas de body con los datos de los pedidos.
+   * La propiedad "badgeType" es una función que determina el tipo de badge a mostrar en la columna de "Estado".
+   * @returns {React.ReactElement} - Un JSX con la tabla.
+   */
 export const Table = () => {
   const headerData = [
     { label: "Id" },
