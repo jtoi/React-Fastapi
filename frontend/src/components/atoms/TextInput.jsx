@@ -12,4 +12,4 @@ export const TextInput = ({ type, name, id, value, handleChange, required }) => 
 			required={required}
 		/>
 	);
-}; c
+};

@@ -1,5 +1,6 @@
+// authService.js
 import api from "./api";
-import axios from 'axios';
+import axios from 'axios'; // Importación única
 import { jwtDecode } from "jwt-decode";
 import * as constants from "../constants";
 
@@ -8,15 +9,7 @@ let requestInterceptor = null;
 let responseInterceptor = null;
 let interceptorsConfigured = false;
 
-// Función para guardar los tokens en localStorage
-const saveTokens = (accessToken, refreshToken, expiresAt) => {
-  console.log('authService: Guardando tokens:', { accessToken, refreshToken, expiresAt });
-  localStorage.setItem("token", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
-  localStorage.setItem("tokenExpiry", expiresAt);
-};
-
-// Función para obtener los tokens almacenados
+// Funciones auxiliares, por ejemplo:
 const getTokens = () => {
   const tokens = {
     accessToken: localStorage.getItem("token"),
@@ -27,7 +20,6 @@ const getTokens = () => {
   return tokens;
 };
 
-// Función para borrar los tokens (logout)
 const clearTokens = () => {
   console.log('authService: Limpiando tokens');
   localStorage.removeItem("token");
@@ -35,8 +27,7 @@ const clearTokens = () => {
   localStorage.removeItem("tokenExpiry");
 };
 
-// Verificar si el token ha expirado
-const isTokenExpired = () => {
+const isTokenExpired = async () => {
   const token = localStorage.getItem("token");
   if (!token) {
     console.log('authService: Token no encontrado, se considera expirado');
@@ -45,17 +36,37 @@ const isTokenExpired = () => {
 
   try {
     const decodedToken = jwtDecode(token);
-    const currentTime = Date.now() / 1000; // Tiempo actual en segundos
+    const currentTime = Date.now() / 1000;
     const isExpired = decodedToken.exp < currentTime;
-    console.log('authService: Token expirado:', isExpired, 'exp:', decodedToken.exp, 'currentTime:', currentTime);
-    return isExpired;
+
+    if (isExpired) {
+      console.log('authService: Token expirado, intentando refrescar...');
+      const success = await refreshToken(); // Intenta refrescar el token
+      return !success; // Devuelve true si no fue posible refrescar
+    }
+
+    return false; // El token aún es válido
   } catch (error) {
     console.error("authService: Error al decodificar el token:", error);
-    return true;
+    return true; // Si algo falla, asumimos que está expirado
   }
 };
 
-// Función para refrescar el token
+// Función para configurar los interceptores de Axios
+export const setupAxiosInterceptors = () => {
+  api.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+};
+
+// Puedes definir también funciones de refreshToken, saveTokens, clearInterceptors, logout, etc.
 const refreshToken = async () => {
   const { refreshToken } = getTokens();
   
@@ -82,91 +93,13 @@ const refreshToken = async () => {
   }
 };
 
-// Configurar interceptores de Axios
-const setupAxiosInterceptors = () => {
-    console.log('authService: Configurando interceptores de Axios. requestInterceptor estado:', requestInterceptor);
-
-    if (interceptorsConfigured) {
-        console.log('authService: Interceptores ya configurados, omitiendo...');
-        return;
-    }
-
-    interceptorsConfigured = true;
-
-    // Limpiar interceptores existentes si hay
-  if (requestInterceptor !== null && typeof requestInterceptor !== 'undefined') {
-        api.interceptors.request.eject(requestInterceptor);
-    }
-    if (responseInterceptor !== null && typeof responseInterceptor !== 'undefined') {
-        api.interceptors.response.eject(responseInterceptor);
-    }
-
-    // Configurar nuevo interceptor de solicitud
-    requestInterceptor = api.interceptors.request.use(
-        async (config) => {
-            console.log('authService: Interceptor de solicitud, URL:', config.url);
-      console.log('authService: Interceptor de solicitud, headers:', config.headers);
-
-            if (config.url && (config.url.includes('auth/token') || config.url.includes('auth/refresh'))) {
-                console.log('authService: Endpoint de autenticación, no añadiendo token');
-                return config;
-            }
-
-            const token = localStorage.getItem('token');
-            console.log('authService: Token disponible:', !!token);
-
-            if (token) {
-                config.headers = config.headers || {};
-                config.headers['Authorization'] = `Bearer ${token}`;
-                console.log('authService: Token añadido a la solicitud:', config.headers['Authorization']);
-            }
-
-            return config;
-        },
-        (error) => Promise.reject(error)
-    );
-
-    // Configurar nuevo interceptor de respuesta
-    responseInterceptor = api.interceptors.response.use(
-        (response) => {
-            console.log('authService: Interceptor de respuesta, respuesta:', response);
-            return response;
-        },
-        async (error) => {
-            const originalRequest = error.config;
-            console.log('authService: Interceptor de respuesta, error:', error);
-
-            if (
-                error.response &&
-                error.response.status === 401 &&
-                !originalRequest._retry &&
-                originalRequest.url &&
-                !originalRequest.url.includes('auth/token') &&
-                !originalRequest.url.includes('auth/refresh')
-            ) {
-                originalRequest._retry = true;
-
-                try {
-                    const success = await refreshToken();
-                    if (success) {
-                        const { accessToken } = getTokens();
-                        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-                        return api(originalRequest);
-                    }
-                } catch (refreshError) {
-                    console.error('authService: Error al refrescar token en interceptor:', refreshError);
-                }
-
-                clearTokens();
-                window.location.href = '/login';
-            }
-
-            return Promise.reject(error);
-        }
-    );
+const saveTokens = (accessToken, refreshToken, expiresAt) => {
+  console.log('authService: Guardando tokens:', { accessToken, refreshToken, expiresAt });
+  localStorage.setItem("token", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+  localStorage.setItem("tokenExpiry", expiresAt);
 };
 
-// Función para limpiar interceptores
 const clearInterceptors = () => {
   console.log('authService: Limpiando interceptores');
   if (requestInterceptor !== null) {
@@ -179,26 +112,20 @@ const clearInterceptors = () => {
   }
 };
 
-// Función de logout
 const logout = async () => {
   const { refreshToken } = getTokens();
-  
   if (refreshToken) {
     try {
-      await api.post(`auth/logout`, {
-        refresh_token: refreshToken
-      });
+      await api.post(`auth/logout`, { refresh_token: refreshToken });
       console.log('authService: Logout exitoso');
     } catch (error) {
       console.error("authService: Error al cerrar sesión:", error);
     }
   }
-  
   clearTokens();
   clearInterceptors();
 };
 
-// Exportar las funciones
 const authService = {
   getTokens,
   saveTokens,

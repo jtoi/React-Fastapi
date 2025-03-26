@@ -8,50 +8,44 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
   const [menus, setMenus] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem("token")); // Mantén el token en el contexto
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  // Función para obtener los datos del usuario (nombre y menús)
   const fetchUserData = useCallback(async () => {
-    if (token) {
-      try {
+    if (!token) {
+        console.log("Token no encontrado en fetchUserData");
+        return;
+    }
+
+    try {
         const userResponse = await api.get(constants.SERVER_URL + "users/me");
         setUsername(userResponse.data.username);
+
         const menusResponse = await api.get(constants.SERVER_URL + "auth/menus/");
         setMenus(menusResponse.data.menus);
-      } catch (error) {
+    } catch (error) {
         console.error("Error fetching user data:", error);
-        // Manejar el error (por ejemplo, redirigir al login)
         setUsername(null);
         setMenus([]);
         localStorage.removeItem("token");
         setToken(null);
-
-      }
-    } else {
-      setUsername(null);
-      setMenus([]);
     }
-  }, [token]);
+}, [token]);
 
-  // Llama a fetchUserData cuando el token cambie
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
 
-  // Función para actualizar el token (para usar después del login)
   const updateToken = (newToken) => {
     setToken(newToken);
     localStorage.setItem("token", newToken);
-    fetchUserData(); // Recarga los datos del usuario después de actualizar el token
   };
 
-  // Función para limpiar el token (para usar en el logout)
-    const clearAuthData = () => {
-        setToken(null);
-        localStorage.removeItem('token');
-        setUsername(null);
-        setMenus([]);
-    }
+  const clearAuthData = () => {
+    setToken(null);
+    localStorage.removeItem('token');
+    setUsername(null);
+    setMenus([]);
+  };
 
   return (
     <UserContext.Provider value={{ username, menus, updateToken, clearAuthData, token }}>
@@ -59,3 +53,4 @@ export const UserProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
+

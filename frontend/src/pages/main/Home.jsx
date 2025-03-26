@@ -1,15 +1,12 @@
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import '../../styles/dashboard.css';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Line } from "react-chartjs-2";
 import { CardSuperior }from "../../components/molecules/CardSuperior";
 import { LineChart }from "../../components/organisms/LineChart";
 import { Table } from "../../components/organisms/Table";
 
 
 export function Home() {
-	const [welcomeImage, setWelcomeImage] = useState('');
+    console.log('Home');
 	let pageSize = 0;
 
     const renderCards = () => {

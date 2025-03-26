@@ -1,5 +1,5 @@
 // Header.js
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCog, faBox, faTruck, faChartBar, faExchangeAlt, faUtensils, faBars } from '@fortawesome/free-solid-svg-icons';
 import { MenuItemWithSubmenu } from '../../components/molecules/MenuItemWithSubmenu';

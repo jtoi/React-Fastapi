@@ -31,47 +31,39 @@ export const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Crear FormData para la solicitud
             const form = new URLSearchParams();
             form.append("username", formData.username);
             form.append("password", formData.password);
-
-            // Usamos axios directamente sin interceptores para el login
+    
             const axiosInstance = axios.create();
             const response = await axiosInstance.post(baseurl + "auth/token", form.toString(), {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
             });
-
+    
             if (response.status === 200) {
-                // Guardar ambos tokens
                 const { access_token, refresh_token, expires_at } = response.data;
+    
+                // Guardar tokens en localStorage
                 authService.saveTokens(access_token, refresh_token, expires_at);
-
-                // Configurar los interceptores después de login exitoso
+    
+                // Configurar interceptores de Axios
                 authService.setupAxiosInterceptors();
-
-                // Actualizar el token en el contexto
+    
+                // Actualizar contexto con el nuevo token
                 updateToken(access_token);
-
+    
                 alert("¡Inicio de sesión exitoso!");
-                navigate("/");
+                // navigate("/");
             } else {
                 alert("Usuario o contraseña incorrectos.");
             }
         } catch (error) {
-            if (error.response) {
-                console.error("Error del servidor:", error.response.data);
-                alert("Usuario o contraseña incorrectos.");
-            } else if (error.request) {
-                console.error("Sin respuesta del servidor:", error.request);
-                alert("No se pudo conectar al servidor.");
-            } else {
-                console.error("Error:", error.message);
-            }
+            console.error("Error en el login:", error.message);
         }
     };
+    
 
     return (
         <div className="container mt-5">

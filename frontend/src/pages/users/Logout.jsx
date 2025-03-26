@@ -1,11 +1,11 @@
 import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import authService from "../../services/authService";
-import { UserContext } from '../../contexts/UserContext'; // Importa el UserContext
+import { UserProvider } from '../../contexts/UserContext'; // Importa el UserContext
 
 export const Logout = () => {
     const navigate = useNavigate();
-    const { clearAuthData } = useContext(UserContext); // Obtiene clearAuthData del contexto
+    const { clearAuthData } = useContext(UserProvider); // Obtiene clearAuthData del contexto
 
     useEffect(() => {
         const performLogout = async () => {
