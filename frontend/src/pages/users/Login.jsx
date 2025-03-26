@@ -24,6 +24,7 @@ export const Login = () => {
     }, [navigate]);
 
     const handleChange = (e) => {
+        console.log("Input cambiado:", e.target.name, e.target.value);
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
