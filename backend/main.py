@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routers.users import auth
 from app.routers.users import user
 from app.routers.users import group
+from app.routers.comercio import comercio
 
 
 app = FastAPI(debug=True)
@@ -27,6 +28,7 @@ app.add_middleware(
 
 app.include_router(user.router)
 app.include_router(group.router)
+app.include_router(comercio.router)
 app.include_router(auth.router, prefix="/auth")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")  # Ajusta la ruta aquí
 

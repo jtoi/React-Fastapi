@@ -7,11 +7,14 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
+from jose.exceptions import ExpiredSignatureError, JWTError
+from app.models.users import User
+from app.schemas.users.token import TokenData
 
 from ..database import get_db
-from ..schemas.token import TokenData
-from ..models import User, Permission, RefreshToken, Group
-from ..config import settings
+from app.schemas.users.token import TokenData
+from app.models.users import User, Permission, RefreshToken, Group
+from app.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -86,20 +89,30 @@ def verify_refresh_token(token: str, db: Session):
     return user
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+async def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        # Decodificar el token JWT
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username: str = payload.get("sub")
-        token_type = payload.get("token_type")
+        token_type: str = payload.get("token_type")
         if username is None or token_type != "access":
             raise credentials_exception
         token_data = TokenData(username=username)
-    except InvalidTokenError:
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except JWTError:
         raise credentials_exception
 
     # Buscar al usuario en la base de datos
@@ -107,13 +120,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
     if user is None:
         raise credentials_exception
 
-    # Validar que el usuario tenga un grupo asignado
-    if not user.group_id: # type: ignore
+    # Validar que el usuario pertenece a un grupo
+    if not user.group_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User does not belong to any group"
         )
-    
+
     return user
 
 

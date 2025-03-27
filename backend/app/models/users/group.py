@@ -20,6 +20,8 @@ class Group(Base):
     created_date = Column(DateTime, server_default=func.now())
     permissions = relationship("Permission", secondary=group_permission, back_populates="groups")
 
+    users = relationship("User", back_populates="group")
+
 class Permission(Base):
     __tablename__ = "permissions"
     id = Column(Integer, primary_key=True, index=True)

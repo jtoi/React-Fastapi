@@ -3,17 +3,17 @@ from datetime import timedelta, datetime, timezone
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, HTTPException, status, APIRouter, Body
 from sqlalchemy.orm import Session
-from ..config import settings
+from app.config import settings
 
-from ..auth.auth_handler import (
+from app.auth.auth_handler import (
     authenticate_user, create_access_token, get_user, get_password_hash,
     create_refresh_token, verify_refresh_token, revoke_all_refresh_tokens,
     get_current_user
 )
-from ..database import get_db
-from ..schemas.user import UserCreate, UserResponse
-from ..schemas.token import Token, TokenData, RefreshTokenRequest
-from ..models import User, RefreshToken, MenuGen as Menu, Group
+from app.database import get_db
+from app.schemas.users.user import UserCreate, UserResponse
+from app.schemas.users.token import Token, TokenData, RefreshTokenRequest
+from app.models.users import User, RefreshToken, MenuGen as Menu, Group
 
 router = APIRouter()
 

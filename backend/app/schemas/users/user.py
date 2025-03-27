@@ -30,6 +30,8 @@ class UserCreate(BaseModel):
             raise ValueError("La contraseña debe incluir al menos un número.")
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", value):  # Opcional: símbolos
             raise ValueError("La contraseña debe incluir al menos un carácter especial.")
+        if len(value) > 32:
+            raise ValueError("La contraseña no debe exceder los 32 caracteres.")
         return value
 
 
