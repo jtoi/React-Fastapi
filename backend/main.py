@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.routers import auth
-from app.routers import user
-from app.routers import group
+from app.routers.users import auth
+from app.routers.users import user
+from app.routers.users import group
 
 
 app = FastAPI(debug=True)

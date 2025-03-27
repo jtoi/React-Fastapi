@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 
-from ..database import Base
+from app.database import Base
 
 class RefreshToken(Base):
     __tablename__ = "refresh_tokens"

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, Boolean, DateTime, func
 from sqlalchemy.orm import relationship
-from ..database import Base
+from app.database import Base
 
 # Tabla de relación entre grupos y permisos
 group_permission = Table(

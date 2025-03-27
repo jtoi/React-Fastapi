@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List
-from ..auth.auth_handler import permission_required
 from sqlalchemy.orm import Session
-from ..models import Group as GroupModel
-from ..models import Permission
-from ..database import get_db
+from app.auth.auth_handler import permission_required
+from app.models.users import Group as GroupModel, Permission
+from app.database import get_db
 
 router = APIRouter()
 
