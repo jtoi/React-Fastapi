@@ -1,5 +1,9 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional, List
+from pydantic import validator
+from datetime import datetime
+
+from app.models.users.user import User  # Import the User class or type from the appropriate module
 
 
 class CommerceBase(BaseModel):
@@ -48,6 +52,12 @@ class CommerceResponse(CommerceBase):
     created_date: Optional[str]
     users: Optional[List[str]]  # Lista de usuarios relacionada con el comercio
     settings: Optional[List["SettingsBase"]]  # Relación con configuraciones
+
+    @validator('users', pre=True)
+    def convert_users_to_strings(cls, value):
+        if value and isinstance(value[0], User):  # Verificar si es una lista de objetos User
+            return [user.username for user in value]  # Extraer el username de cada usuario
+        return value
 
 # Importación lazy
 from .settings import SettingsBase

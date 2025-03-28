@@ -17,8 +17,9 @@ class User(Base):
     name = Column(String(150), index=False)
     username = Column(String(150), unique=True)
     hashed_password = Column(String(150))
-    is_active = Column(Boolean, nullable=True, default=True, index=True)
-    is_deleted = Column(Boolean, nullable=True, default=False, index=True)
+    is_active = Column(Boolean, default=True, index=True)
+    is_deleted = Column(Boolean,default=False, index=True)
+    is_superuser = Column(Boolean, default=False, index=True)
     modified_date = Column(DateTime, onupdate=func.now())
     created_date = Column(DateTime, server_default=func.now())
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.auth.auth_handler import permission_required
-from app.models.comercio.comercio import Commerce  # Tu modelo de comercio
+from app.models.comercio.comercio import Commerce, user_commerce # Tu modelo de comercio
 from app.models.users.user import User  # Tu modelo de usuario
 from app.schemas.comercio.comercio import CommerceResponse, CommerceCreate  # Tu esquema de respuesta
 from app.middleware.custom_middleware import get_db  # Funciones para obtener la DB y el usuario actual
@@ -57,14 +57,7 @@ def create_commerce(
 ):
     """
     Crea un nuevo comercio asociado al usuario autenticado.
-
-    Args:
-        commerce (CommerceCreate): Datos del comercio a crear.
-        db (Session): Sesión de base de datos.
-        current_user (User): Usuario autenticado.
-
-    Returns:
-        CommerceResponse: Comercio recién creado.
+    Además, asocia automáticamente el comercio con todos los usuarios que tienen is_superadmin=True.
     """
     # Validación de permisos en el usuario actual
     if not current_user.has_permission_to_create_commerce:
@@ -80,6 +73,22 @@ def create_commerce(
     db.add(new_commerce)
     db.commit()
     db.refresh(new_commerce)
+
+    # Buscar todos los usuarios con is_superadmin=True
+    superadmins = db.query(User).filter(User.is_superuser == True).all()
+
+    # Asociar los superadmins al nuevo comercio
+    for superadmin in superadmins:
+        db.execute(
+            user_commerce.insert().values(user_id=superadmin.id, commerce_id=new_commerce.id)
+        )
+
+    db.commit()
+
+    # Convertir los campos datetime a str antes de devolverlos
+    new_commerce.created_date = new_commerce.created_date.isoformat() if new_commerce.created_date else None # type: ignore
+    new_commerce.modified_date = new_commerce.modified_date.isoformat() if new_commerce.modified_date else None # type: ignore
+    new_commerce.inactive_date = new_commerce.inactive_date.isoformat() if new_commerce.inactive_date else None # type: ignore
 
     return new_commerce
 
