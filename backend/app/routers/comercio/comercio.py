@@ -76,7 +76,7 @@ def create_commerce(
         raise HTTPException(status_code=400, detail="Ya existe un comercio con este NIF.")
 
     # Crear el comercio
-    new_commerce = Commerce(**commerce.dict(), owner_id=current_user.id)
+    new_commerce = Commerce(**commerce.dict())
     db.add(new_commerce)
     db.commit()
     db.refresh(new_commerce)

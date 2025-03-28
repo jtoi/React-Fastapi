@@ -25,5 +25,8 @@ class User(Base):
     group = relationship("Group", back_populates="users")
     commerces = relationship("Commerce", secondary="user_commerce", back_populates="users")
 
+    def has_permission_to_create_commerce(self):
+        return self.group.has_permission_to_create_commerce()
+
 
     

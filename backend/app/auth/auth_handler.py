@@ -121,7 +121,7 @@ async def get_current_user(
         raise credentials_exception
 
     # Validar que el usuario pertenece a un grupo
-    if not user.group_id:
+    if not user.group_id: # type: ignore
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User does not belong to any group"
